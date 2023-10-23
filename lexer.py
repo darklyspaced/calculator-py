@@ -36,11 +36,12 @@ class Lexer:
                 case _: # NOTE: source of many bugs if impl is taken further
                     if self.ch.isnumeric():
                         num = [self.ch] 
-                        next = self.eat()
+                        next = self.peek()
 
                         while next != None and next.isnumeric():
                             num.append(self.ch)
-                            next = self.eat()
+                            self.eat(); # consume the number
+                            next = self.peek()
 
                         lex = "".join(num)
                         self.add_tok(TokenKind.INTEGER, lex, int(lex))
@@ -48,7 +49,9 @@ class Lexer:
                         print("unsupported symbol: ", self.ch)
 
         return self.tokens
-                    
+
+    def print_tokens(self):
+        print([tok.__str__() for tok in self.tokens])
 
     def add_tok(self, kind, lex = None, lit = None):
         if lex == None:
@@ -65,8 +68,10 @@ class Lexer:
         return None;
 
 
-    def peek(self) -> str:
-        return self.src[self.pos + 1]
+    def peek(self) -> Optional[str]:
+        if not self.at_end():
+            return self.src[self.pos] 
+        return None;
 
 
     def skip_whitespace(self):
