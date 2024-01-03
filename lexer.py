@@ -11,7 +11,7 @@ class Lexer:
         self.src = src
 
 
-    def lex(self) -> List[Token]:
+    def get_tokens(self) -> List[Token]:
         while self.eat() != None:
             self.skip_whitespace()
             match self.ch:
@@ -33,7 +33,7 @@ class Lexer:
                     self.add_tok(TokenKind.EXCLAMATION)
                 case None:
                     self.add_tok(TokenKind.EOF)
-                case _: # NOTE: source of many bugs if impl is taken further
+                case _:
                     if self.ch.isnumeric():
                         num = [self.ch] 
                         next = self.peek()
